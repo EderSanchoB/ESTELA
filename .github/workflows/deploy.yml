@@ -1,0 +1,67 @@
+# Publica ESTELA en GitHub Pages automáticamente cada vez que se hace push
+# a la rama "main". No hay que correr nada a mano: GitHub arma el sitio
+# con "npm run build" y lo publica.
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permite lanzarlo a mano desde la pestaña "Actions" del repositorio,
+  # sin necesidad de un push nuevo.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si se hace push dos veces seguidas antes de que termine la primera
+# publicación, cancela la primera y deja corriendo solo la más reciente.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Construir el sitio
+        run: npm run build
+        env:
+          # Base path para que los archivos (JS/CSS/imágenes) se busquen en
+          # usuario.github.io/<nombre-del-repo>/ en vez de en la raíz — ver
+          # el comentario en vite.config.ts. Se calcula solo, a partir del
+          # nombre real del repositorio: no hay que tocar nada si el repo
+          # se renombra.
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Preparar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir el sitio construido (dist/) como artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

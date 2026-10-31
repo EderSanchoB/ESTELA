@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* Tipografías (antes cargadas con next/font/google en layout.tsx).
+   Mismos pesos que antes: Archivo 500/600/700/800, IBM Plex Sans
+   400/500/600, IBM Plex Mono 400/500 — subset "latin" (el default de
+   estos paquetes de Fontsource). */
+@import "@fontsource/archivo/500.css";
+@import "@fontsource/archivo/600.css";
+@import "@fontsource/archivo/700.css";
+@import "@fontsource/archivo/800.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+:root {
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+  --muted: #737373;
+  --line: #e5e5e5;
+  --accent-blue: #0c8ce9;
+
+  /* Antes next/font generaba estas variables automáticamente
+     (variable: "--font-archivo", etc. en layout.tsx); acá las
+     definimos a mano apuntando al nombre de familia real que
+     registran los @font-face de Fontsource. */
+  --font-archivo: "Archivo", sans-serif;
+  --font-plex-sans: "IBM Plex Sans", sans-serif;
+  --font-plex-mono: "IBM Plex Mono", monospace;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent-blue: var(--accent-blue);
+  --font-sans: var(--font-plex-sans);
+  --font-display: var(--font-archivo);
+  --font-mono: var(--font-plex-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Custom brand cursor (see CustomCursor.tsx). Only applied once the
+   component confirms a fine/hover-capable pointer is present, so touch
+   devices keep their native cursor behavior. */
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
