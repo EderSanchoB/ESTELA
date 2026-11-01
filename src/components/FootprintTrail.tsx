@@ -7,6 +7,7 @@ import {
   type FootprintHost,
   type FootprintStep,
 } from "@/data/footprint-trail";
+import { withBase } from "@/lib/withBase";
 
 /**
  * Eder: "estás poniendo todas al mismo tiempo y van una a una, nunca hay
@@ -186,7 +187,7 @@ function Huella({
       style={{ top, left, width }}
     >
       <img
-        src="/decor/huella.png"
+        src={withBase("/decor/huella.png")}
         alt=""
         width={152}
         height={324}

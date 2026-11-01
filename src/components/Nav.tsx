@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getNavLogoBox, type PixelBox } from "@/lib/heroLogoRect";
 import { clearIntroPlayed } from "@/lib/introFlag";
 import VRGuideDropdown from "./VRGuideDropdown";
+import { withBase } from "@/lib/withBase";
 
 const NAV_LINKS = [
   { label: "Workflows", href: "#workflows" },
@@ -107,7 +108,7 @@ export default function Nav({
           }}
         >
           <img
-            src="/brand/estela-logo.png"
+            src={withBase("/brand/estela-logo.png")}
             alt="ESTELA"
             width={661}
             height={178}
@@ -136,7 +137,7 @@ export default function Nav({
           }`}
         >
           <img
-            src="/brand/estela-logo.png"
+            src={withBase("/brand/estela-logo.png")}
             alt="ESTELA"
             width={661}
             height={178}

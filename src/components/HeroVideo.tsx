@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { supportsAlphaWebm } from "@/lib/alphaVideoSupport";
+import { withBase } from "@/lib/withBase";
 
 // Celular en vertical: usa la animación corta dedicada (solo el ciclo
 // "ESTELA" + puntitos, sin la transición al logo final — ver
@@ -49,11 +50,11 @@ export default function HeroVideo({
   };
 
   const alphaSrc = isMobilePortrait
-    ? "/hero/estela-hero-mobile-alpha.webm"
-    : "/hero/estela-hero-alpha.webm";
+    ? withBase("/hero/estela-hero-mobile-alpha.webm")
+    : withBase("/hero/estela-hero-alpha.webm");
   const fallbackSrc = isMobilePortrait
-    ? "/hero/estela-hero-mobile-fallback.mp4"
-    : "/hero/estela-hero-fallback.mp4";
+    ? withBase("/hero/estela-hero-mobile-fallback.mp4")
+    : withBase("/hero/estela-hero-fallback.mp4");
 
   return (
     <video

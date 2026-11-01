@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/withBase";
 // Los 16 casos de estudio del corpus del TFG (Capítulo 4, "Del objeto al
 // entorno"), condensados para la ficha visual de la sección "Casos de
 // Estudio". El contenido de cada campo proviene del documento
@@ -47,7 +48,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Observación remota · Telepresencia militar",
     tipoUsuario: "Personal militar · Operadores de defensa",
     dimensiones: { representacional: true, participativa: false, afectiva: false, narrativa: false },
-    imagen: "/casos/c-01.png",
+    imagen: withBase("/casos/c-01.png"),
   },
   {
     codigo: "C-02",
@@ -61,7 +62,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Exploración sensorial · Prototipo de experiencia inmersiva",
     tipoUsuario: "Usuarios individuales · Público general en exhibición",
     dimensiones: { representacional: true, participativa: false, afectiva: true, narrativa: true },
-    imagen: "/casos/c-02.jpg",
+    imagen: withBase("/casos/c-02.jpg"),
   },
   {
     codigo: "C-03",
@@ -75,7 +76,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Investigación en gráficos por computadora · Prototipo experimental académico",
     tipoUsuario: "Investigadores · Comunidad científica de computación gráfica",
     dimensiones: { representacional: true, participativa: false, afectiva: false, narrativa: false },
-    imagen: "/casos/c-03.jpg",
+    imagen: withBase("/casos/c-03.jpg"),
   },
   {
     codigo: "C-04",
@@ -89,7 +90,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Exploración tecnológica · Prototipo de sistema cuerpo-espacio",
     tipoUsuario: "Investigadores · Primeros adoptantes · Industria del videojuego",
     dimensiones: { representacional: true, participativa: true, afectiva: false, narrativa: false },
-    imagen: "/casos/c-04.jpg",
+    imagen: withBase("/casos/c-04.jpg"),
   },
   {
     codigo: "C-05",
@@ -103,7 +104,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Telepresencia · Visualización de datos · Simulación espacial",
     tipoUsuario: "Investigadores NASA · Ingenieros aeroespaciales",
     dimensiones: { representacional: true, participativa: true, afectiva: false, narrativa: false },
-    imagen: "/casos/c-05.jpg",
+    imagen: withBase("/casos/c-05.jpg"),
   },
   {
     codigo: "C-06",
@@ -117,7 +118,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Consumo de contenido VR 360 · Educación básica",
     tipoUsuario: "Público general · Estudiantes · Consumidores de tecnología",
     dimensiones: { representacional: true, participativa: false, afectiva: true, narrativa: false },
-    imagen: "/casos/c-06.png",
+    imagen: withBase("/casos/c-06.png"),
   },
   {
     codigo: "C-07",
@@ -131,7 +132,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Ideación · Exploración espacial · Intervención terapéutica",
     tipoUsuario: "Artistas y diseñadores · Terapeutas · Estudiantes de diseño",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: false },
-    imagen: "/casos/c-07.png",
+    imagen: withBase("/casos/c-07.png"),
   },
   {
     codigo: "C-08",
@@ -145,7 +146,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Entretenimiento narrativo · Investigación en cognición espacial",
     tipoUsuario: "Jugadores de VR · Investigadores en cognición y consciencia",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: true },
-    imagen: "/casos/c-08.jpg",
+    imagen: withBase("/casos/c-08.jpg"),
   },
   {
     codigo: "C-09",
@@ -159,7 +160,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Documentación urbana · Navegación interactiva",
     tipoUsuario: "Usuarios generales · Investigadores",
     dimensiones: { representacional: true, participativa: true, afectiva: false, narrativa: false },
-    imagen: "/casos/c-09.png",
+    imagen: withBase("/casos/c-09.png"),
   },
   {
     codigo: "C-10",
@@ -173,7 +174,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Documentación patrimonial · Reconstrucción y gestión de obra",
     tipoUsuario: "Arqueólogos y restauradores · Ingenieros de obra",
     dimensiones: { representacional: true, participativa: true, afectiva: false, narrativa: true },
-    imagen: "/casos/c-10.jpg",
+    imagen: withBase("/casos/c-10.jpg"),
   },
   {
     codigo: "C-11",
@@ -187,7 +188,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Exploración formal · Diseño colaborativo conceptual",
     tipoUsuario: "Arquitectos de la firma · Visitantes de exposición especializada",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: false },
-    imagen: "/casos/c-11.jpg",
+    imagen: withBase("/casos/c-11.jpg"),
   },
   {
     codigo: "C-12",
@@ -201,7 +202,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Diseño de interiores · Validación con cliente",
     tipoUsuario: "Equipo de diseño Gensler · Cliente corporativo (NVIDIA)",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: false },
-    imagen: "/casos/c-12.jpg",
+    imagen: withBase("/casos/c-12.jpg"),
   },
   {
     codigo: "C-13",
@@ -215,7 +216,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Diseño de presentación · Venta a clientes premium",
     tipoUsuario: "Arquitectos de KPF · Clientes de proyectos residenciales de lujo",
     dimensiones: { representacional: true, participativa: false, afectiva: true, narrativa: false },
-    imagen: "/casos/c-13.png",
+    imagen: withBase("/casos/c-13.png"),
   },
   {
     codigo: "C-14",
@@ -229,7 +230,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Investigación y desarrollo · Exposición especializada",
     tipoUsuario: "Equipo interno de Morphosis · Público de exposición especializada",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: true },
-    imagen: "/casos/c-14.jpg",
+    imagen: withBase("/casos/c-14.jpg"),
   },
   {
     codigo: "C-15",
@@ -243,7 +244,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Revisión de diseño · Colaboración remota",
     tipoUsuario: "Arquitectos y clientes · Equipos distribuidos globalmente",
     dimensiones: { representacional: true, participativa: true, afectiva: false, narrativa: false },
-    imagen: "/casos/c-15.jpg",
+    imagen: withBase("/casos/c-15.jpg"),
   },
   {
     codigo: "C-16",
@@ -257,7 +258,7 @@ export const CASOS_DE_ESTUDIO: CasoDeEstudio[] = [
     fase: "Revisión participativa con usuarios finales · Validación de diseño",
     tipoUsuario: "Personal de salud · Arquitectos de Stantec",
     dimensiones: { representacional: true, participativa: true, afectiva: true, narrativa: false },
-    imagen: "/casos/c-16.jpg",
+    imagen: withBase("/casos/c-16.jpg"),
   },
 ];
 

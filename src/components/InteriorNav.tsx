@@ -4,6 +4,7 @@
 import { Link } from "react-router-dom";
 import { clearIntroPlayed, markIntroPlayed } from "@/lib/introFlag";
 import VRGuideDropdown from "./VRGuideDropdown";
+import { withBase } from "@/lib/withBase";
 
 const NAV_LINKS = [
   { label: "Workflows", href: "/#workflows" },
@@ -99,7 +100,7 @@ export default function InteriorNav() {
           className="fixed left-6 top-5 z-20 hidden shrink-0 sm:block"
         >
           <img
-            src="/brand/estela-logo.png"
+            src={withBase("/brand/estela-logo.png")}
             alt="ESTELA"
             width={661}
             height={178}
@@ -121,7 +122,7 @@ export default function InteriorNav() {
           className="block shrink-0 sm:hidden"
         >
           <img
-            src="/brand/estela-logo.png"
+            src={withBase("/brand/estela-logo.png")}
             alt="ESTELA"
             width={661}
             height={178}

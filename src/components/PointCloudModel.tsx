@@ -2,6 +2,7 @@ import { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { withBase } from "@/lib/withBase";
 
 // This file is a pre-decimated bake (~112k of the source scan's 1.4M
 // points, raw/un-normalized) rather than the full photogrammetry export —
@@ -9,7 +10,7 @@ import * as THREE from "three";
 // re-generating from a fresh source scan. Baking it down client-side
 // would mean shipping the full multi-MB source file just to throw away
 // 92% of it after download.
-const MODEL_URL = "/models/arq-nube-puntos.glb";
+const MODEL_URL = withBase("/models/arq-nube-puntos.glb");
 
 // How far the model turns to follow the cursor (radians). Safe to push
 // fairly far: framing below is based on a bounding *sphere*, so it can't

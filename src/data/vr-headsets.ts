@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/withBase";
 export type VRHeadsetStep = {
   titulo: string;
   texto: string;
@@ -37,7 +38,7 @@ export const VR_HEADSETS: VRHeadset[] = [
   {
     id: "meta-quest",
     etiqueta: "Meta Quest",
-    modelUrl: "/models/meta-quest.glb",
+    modelUrl: withBase("/models/meta-quest.glb"),
     pasos: [
       {
         titulo: "Carga y enciende",
@@ -76,7 +77,7 @@ export const VR_HEADSETS: VRHeadset[] = [
   {
     id: "htc-vive",
     etiqueta: "HTC Vive",
-    modelUrl: "/models/htc-vive.glb",
+    modelUrl: withBase("/models/htc-vive.glb"),
     pasos: [
       {
         titulo: "Instala SteamVR en la PC",
@@ -120,7 +121,7 @@ export const VR_HEADSETS: VRHeadset[] = [
   {
     id: "valve-index",
     etiqueta: "Valve Index",
-    modelUrl: "/models/valve-index.glb",
+    modelUrl: withBase("/models/valve-index.glb"),
     pasos: [
       {
         titulo: "Instala Steam y SteamVR",
@@ -164,7 +165,7 @@ export const VR_HEADSETS: VRHeadset[] = [
   {
     id: "smartphone",
     etiqueta: "Visor de smartphone (Cardboard / Merge)",
-    modelUrl: "/models/smartphone.glb",
+    modelUrl: withBase("/models/smartphone.glb"),
     pasos: [
       {
         titulo: "Exporta un panorama 360° estéreo",

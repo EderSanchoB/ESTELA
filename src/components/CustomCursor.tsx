@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { withBase } from "@/lib/withBase";
 
 type Particle = {
   x: number;
@@ -202,7 +203,7 @@ export default function CustomCursor() {
         aria-hidden="true"
         className="pointer-events-none fixed left-0 top-0 z-[999] w-11 aspect-[199/109] mix-blend-difference opacity-0 transition-[opacity,transform] duration-150 ease-out will-change-transform"
         style={{
-          backgroundImage: "url(/cursor/cursor-goggles.png)",
+          backgroundImage: `url(${withBase("/cursor/cursor-goggles.png")})`,
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
