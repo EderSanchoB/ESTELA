@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 import CustomCursor from "@/components/CustomCursor";
 import Nav from "@/components/Nav";
 import HeroBody from "@/components/HeroBody";
@@ -33,6 +34,7 @@ type Phase = "intro" | "revealed";
 export default function Home() {
   const [phase, setPhase] = useState<Phase>("intro");
   const [logoLocked, setLogoLocked] = useState(false);
+  const location = useLocation();
 
   // Fires the moment the hero video's animation ends. The video's last
   // frame already places the ESTELA mark exactly where the real nav logo
@@ -145,6 +147,29 @@ export default function Home() {
       body.style.overflow = previousBodyOverflow;
     };
   }, [phase]);
+
+  // Eder: "funciona todo excepto el boton de instrucciones VR en el
+  // topbar y el footer para llevar a esa seccion" — el efecto de arriba
+  // (el useLayoutEffect con deps []) solo lee window.location.hash una
+  // vez, al MONTAR Home: cubre entrar desde otra pagina (el pathname
+  // cambia de /tutoriales/xxx a /, asi que Home se vuelve a montar) pero
+  // no cubre hacer click en "Instrucciones VR" ESTANDO YA en home — ahi
+  // el pathname no cambia, React Router solo actualiza el hash de la URL
+  // sin desmontar/montar Home de nuevo, asi que ese efecto nunca se
+  // vuelve a correr. Ademas, a diferencia de un <a href="#ancla"> comun
+  // (que el navegador desplaza solo, de forma nativa), el <Link> de
+  // React Router siempre intercepta el click y usa pushState — por eso
+  // ni siquiera el scroll nativo del navegador entra a salvar este caso.
+  // Este efecto reacciona a cualquier cambio de location.hash mientras
+  // Home ya esta montada (fase "revealed") y repite el mismo scrollIntoView
+  // — cubre exactamente el boton del topbar y el del footer estando en home.
+  useEffect(() => {
+    if (phase !== "revealed") return;
+    if (!location.hash) return;
+    document
+      .querySelector(location.hash)
+      ?.scrollIntoView({ behavior: "auto", block: "start" });
+  }, [location.hash, phase]);
 
   return (
     <div className="relative flex min-h-screen flex-col bg-paper">
