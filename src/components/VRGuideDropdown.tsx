@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { VR_HEADSETS } from "@/data/vr-headsets";
+import { scrollToSectionIfPresent } from "@/lib/scrollToSection";
 
 const CLOSE_DELAY_MS = 150;
 const REVEAL_DURATION_MS = 450;
@@ -179,9 +180,19 @@ export default function VRGuideDropdown({
     onNavigate?.();
   };
 
+  // Solo para el link principal ("Instrucciones VR" en si, no cada gafa
+  // del desplegable): si ya se esta en home, lo desplaza a la seccion de
+  // una vez, sin esperar a que cambie la URL (ver scrollToSection.ts).
+  // Las gafas del desplegable navegan a su propia pagina de tutorial, asi
+  // que no les toca este scroll.
+  const closeAndNavigateToTrigger = () => {
+    scrollToSectionIfPresent(href);
+    closeAndNavigate();
+  };
+
   return (
     <div ref={triggerRef} onMouseEnter={openMenu} onMouseLeave={scheduleClose}>
-      <Link to={href} onClick={closeAndNavigate} className={className}>
+      <Link to={href} onClick={closeAndNavigateToTrigger} className={className}>
         {label}
       </Link>
 

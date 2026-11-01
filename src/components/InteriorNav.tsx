@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { clearIntroPlayed, markIntroPlayed } from "@/lib/introFlag";
 import VRGuideDropdown from "./VRGuideDropdown";
 import { withBase } from "@/lib/withBase";
+import { scrollToSectionIfPresent } from "@/lib/scrollToSection";
 
 const NAV_LINKS = [
   { label: "Workflows", href: "/#workflows" },
@@ -154,7 +155,10 @@ export default function InteriorNav() {
               <Link
                 key={link.href}
                 to={link.href}
-                onClick={markIntroPlayed}
+                onClick={() => {
+                  markIntroPlayed();
+                  scrollToSectionIfPresent(link.href);
+                }}
                 className="transition-colors hover:text-white"
               >
                 {link.label}
@@ -177,7 +181,10 @@ export default function InteriorNav() {
 
           <Link
             to="/#explorar"
-            onClick={markIntroPlayed}
+            onClick={() => {
+              markIntroPlayed();
+              scrollToSectionIfPresent("/#explorar");
+            }}
             className="rounded-full bg-white px-5 py-2.5 font-display text-sm font-medium text-black transition-colors hover:bg-neutral-200"
           >
             Asistente IA
@@ -195,7 +202,10 @@ export default function InteriorNav() {
           <Link
             key={link.href}
             to={link.href}
-            onClick={markIntroPlayed}
+            onClick={() => {
+              markIntroPlayed();
+              scrollToSectionIfPresent(link.href);
+            }}
             className="shrink-0 snap-start whitespace-nowrap transition-colors hover:text-white"
           >
             {link.label}

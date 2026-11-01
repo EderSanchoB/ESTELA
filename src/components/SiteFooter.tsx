@@ -2,6 +2,7 @@
 // ya no aplica en esta SPA de Vite.)
 import { Link } from "react-router-dom";
 import { markIntroPlayed } from "@/lib/introFlag";
+import { scrollToSectionIfPresent } from "@/lib/scrollToSection";
 import FooterWave from "./FooterWave";
 
 // Misma lista que NAV_LINKS en Nav.tsx (y los mismos anclas), más
@@ -62,7 +63,10 @@ export default function SiteFooter() {
                   <Link
                     key={link.label}
                     to={link.href}
-                    onClick={markIntroPlayed}
+                    onClick={() => {
+                      markIntroPlayed();
+                      scrollToSectionIfPresent(link.href);
+                    }}
                     className="transition-colors hover:text-white"
                   >
                     {link.label}

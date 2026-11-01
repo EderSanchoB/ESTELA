@@ -4,6 +4,7 @@ import { getNavLogoBox, type PixelBox } from "@/lib/heroLogoRect";
 import { clearIntroPlayed } from "@/lib/introFlag";
 import VRGuideDropdown from "./VRGuideDropdown";
 import { withBase } from "@/lib/withBase";
+import { scrollToSectionIfPresent } from "@/lib/scrollToSection";
 
 const NAV_LINKS = [
   { label: "Workflows", href: "#workflows" },
@@ -169,6 +170,7 @@ export default function Nav({
               <Link
                 key={link.href}
                 to={link.href}
+                onClick={() => scrollToSectionIfPresent(link.href)}
                 className="transition-colors hover:text-black"
               >
                 {link.label}
@@ -191,6 +193,7 @@ export default function Nav({
 
           <Link
             to="#explorar"
+            onClick={() => scrollToSectionIfPresent("#explorar")}
             className="rounded-full bg-black px-5 py-2.5 font-display text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
             Asistente IA
@@ -212,6 +215,7 @@ export default function Nav({
           <Link
             key={link.href}
             to={link.href}
+            onClick={() => scrollToSectionIfPresent(link.href)}
             className="shrink-0 snap-start whitespace-nowrap transition-colors hover:text-black"
           >
             {link.label}
