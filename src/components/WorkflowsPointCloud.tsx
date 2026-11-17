@@ -780,7 +780,20 @@ export default function WorkflowsPointCloud({ videos }: { videos: WorkflowVideo[
         frameloop={activeId ? "never" : "always"}
         dpr={[1, 1.75]}
         camera={{ fov: CAMERA_FOV, position: [0, 0, 12] }}
-        gl={{ antialias: true, alpha: true }}
+        // preserveDrawingBuffer: Eder: "al dar click a los videos salen
+        // estas rayas al fondo antes de que se quiten" — al abrir el
+        // reproductor, frameloop pasa a "never" (ver más abajo) para
+        // pausar la nube detrás del modal. Por defecto WebGL puede
+        // limpiar/descartar su buffer de dibujo justo después de
+        // presentar un cuadro; si eso pasa en el mismo instante en que
+        // se pausa, el `backdrop-filter: blur()` del modal (ver
+        // VideoPlayerModal.tsx) termina muestreando un buffer a medio
+        // limpiar — de ahí las rayas, que desaparecen apenas el
+        // navegador logra una captura válida. preserveDrawingBuffer
+        // conserva ese último cuadro completo, así el fondo que se ve
+        // desenfocado detrás del video siempre es una imagen real y
+        // estable, nunca basura de GPU a medio componer.
+        gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true }}
         style={{ position: "absolute", inset: 0 }}
       >
         <Scene
