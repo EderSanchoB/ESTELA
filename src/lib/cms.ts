@@ -21,6 +21,8 @@
  * solo, sin que yo tenga que tocar el código ni subir nada a GitHub.
  */
 
+import type { CasoDeEstudio } from "@/data/casos-de-estudio";
+
 const SPREADSHEET_ID = "1dndj_LlbvZDz0fQu0CQfdDnIQfAFfrO2SOPrTR4so1Y";
 
 export type WorkflowVideo = {
@@ -184,3 +186,65 @@ export function extractYouTubeId(url: string): string | null {
     return null;
   }
 }
+
+/**
+ * Pestaña "Archivo histórico" (sheetId=1). Fila 1 = encabezados, datos
+ * desde la fila 2. Columnas A–U: ID, Año, Periodo, Título, Categoría,
+ * Ámbito, Autor o institución, Lugar, Descripción, Tecnología, Contexto
+ * de aplicación, Fase del proceso, Tipo de usuario, Representacional,
+ * Participativa, Afectiva, Narrativa, Imagen (URL), Fuente (APA 7),
+ * Enlace, Publicado (ver claude/cms-estela.md para el detalle completo).
+ *
+ * "Categoría", "Fuente (APA 7)" y "Enlace" existen en la hoja pero
+ * ningún componente del sitio los usa todavía (la ficha actual no cita
+ * fuente ni distingue categoría) — no se leen acá; agregarlos más
+ * adelante es solo sumar una línea a este mapeo, la hoja ya los tiene.
+ *
+ * Eder: "acomódala en orden cronológico" — el orden se resuelve ACÁ
+ * (por la columna Año, ascendente) antes de devolver los casos, así
+ * cualquier componente que use este resultado ya los recibe en el
+ * orden correcto.
+ */
+export async function fetchArchivoHistorico(): Promise<CasoDeEstudio[]> {
+  const rows = await fetchGvizRows("Archivo histórico", "A2:U200");
+
+  const conAnio: { anio: number; caso: CasoDeEstudio }[] = [];
+
+  for (const row of rows) {
+    const codigo = cellText(row[0]);
+    if (!codigo) continue;
+    if (!cellBool(row[20])) continue; // Publicado
+
+    const autor = cellText(row[6]);
+    const periodo = cellText(row[2]);
+    const lugar = cellText(row[7]);
+
+    conAnio.push({
+      anio: cellNumber(row[1]),
+      caso: {
+        codigo,
+        titulo: [cellText(row[3])],
+        ambito: cellText(row[5]),
+        subtitulo: [autor, periodo, lugar].filter(Boolean).join(" · "),
+        descripcion: cellText(row[8]),
+        tecnologia: cellText(row[9]),
+        contexto: cellText(row[10]),
+        fase: cellText(row[11]),
+        tipoUsuario: cellText(row[12]),
+        dimensiones: {
+          representacional: cellBool(row[13]),
+          participativa: cellBool(row[14]),
+          afectiva: cellBool(row[15]),
+          narrativa: cellBool(row[16]),
+        },
+        imagen: cellText(row[17]),
+      },
+    });
+  }
+
+  // Cronológico ascendente por Año (Periodo conserva el texto de la
+  // ficha; Año es el número puro que define el orden).
+  conAnio.sort((a, b) => a.anio - b.anio);
+  return conAnio.map((c) => c.caso);
+}
+

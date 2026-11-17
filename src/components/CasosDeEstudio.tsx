@@ -3,11 +3,11 @@ import FichaCard from "./FichaCard";
 import FichaLightbox from "./FichaLightbox";
 import FootprintHost from "./FootprintTrail";
 import {
-  CASOS_DE_ESTUDIO,
   DIMENSIONES_INMERSION,
   type CasoDeEstudio,
   type DimensionInmersion,
 } from "@/data/casos-de-estudio";
+import { useArchivoHistoricoData } from "@/hooks/useArchivoHistoricoData";
 import { useResponsiveScale } from "@/lib/useResponsiveScale";
 
 // Ficha's real, unscaled footprint — must match FichaCard's own
@@ -67,7 +67,8 @@ function clamp(value: number, min: number, max: number) {
  * ficha tenga que recalcular sus propios tamaños de fuente.
  */
 export default function CasosDeEstudio({ visible }: { visible: boolean }) {
-  const count = CASOS_DE_ESTUDIO.length;
+  const { status, casos } = useArchivoHistoricoData();
+  const count = casos.length;
   // designHeight=1100: a partir de esta altura de VENTANA (no de
   // contenedor — ver useResponsiveScale) la ficha queda a tamaño
   // completo; por debajo, se encoge junto con el ancho. Eder: "las
@@ -155,14 +156,13 @@ export default function CasosDeEstudio({ visible }: { visible: boolean }) {
       dragMoved.current <= CLICK_MAX_MOVEMENT &&
       pointerDownIndex.current !== null
     ) {
-      setLightboxCaso(CASOS_DE_ESTUDIO[pointerDownIndex.current]);
+      setLightboxCaso(casos[pointerDownIndex.current]);
     }
     pointerDownIndex.current = null;
   };
 
   const goTo = (next: number) => setIndex(clamp(next, 0, count - 1));
 
-  const centeredCaso = CASOS_DE_ESTUDIO[settle(index)];
 
   // Contenido de la nota sobre las 4 dimensiones — se renderiza dos veces
   // más abajo (relleno invisible + párrafo real), así que vive en una
@@ -290,6 +290,44 @@ export default function CasosDeEstudio({ visible }: { visible: boolean }) {
           Archivo Histórico
         </p>
 
+        {status === "loading" && (
+          <div
+            className="mt-4 flex items-center justify-center"
+            style={{ height: CARD_HEIGHT * scale + 40 }}
+          >
+            <p className="font-sans text-sm text-neutral-400">
+              Cargando el archivo histórico…
+            </p>
+          </div>
+        )}
+
+        {status === "error" && (
+          <div
+            className="mt-4 flex flex-col items-center justify-center gap-2 px-6 text-center"
+            style={{ height: CARD_HEIGHT * scale + 40 }}
+          >
+            <p className="font-sans text-sm text-neutral-500">
+              No se pudo cargar el archivo histórico en este momento.
+            </p>
+            <p className="font-sans text-xs text-neutral-400">
+              Revisá tu conexión e intentá recargar la página.
+            </p>
+          </div>
+        )}
+
+        {status === "ready" && count === 0 && (
+          <div
+            className="mt-4 flex items-center justify-center"
+            style={{ height: CARD_HEIGHT * scale + 40 }}
+          >
+            <p className="font-sans text-sm text-neutral-400">
+              Todavía no hay casos publicados en el archivo histórico.
+            </p>
+          </div>
+        )}
+
+        {status === "ready" && count > 0 && (
+        <>
         <div className="relative mt-4">
           <div
             ref={stageRef}
@@ -306,7 +344,7 @@ export default function CasosDeEstudio({ visible }: { visible: boolean }) {
             onPointerUp={endDrag}
             onPointerCancel={endDrag}
           >
-            {CASOS_DE_ESTUDIO.map((caso, i) => {
+            {casos.map((caso, i) => {
               const offset = i - index;
               const abs = Math.abs(offset);
               const cardScale =
@@ -414,8 +452,10 @@ export default function CasosDeEstudio({ visible }: { visible: boolean }) {
           {String(settle(index) + 1).padStart(2, "0")} /{" "}
           {String(count).padStart(2, "0")}
           {" — "}
-          {centeredCaso.codigo}
+          {casos[settle(index)].codigo}
         </p>
+        </>
+        )}
       </div>
 
       {lightboxCaso && (
