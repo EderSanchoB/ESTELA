@@ -29,6 +29,12 @@ import {
 // el code-splitting en sí sigue valiendo la pena.)
 const HeroVideo = lazy(() => import("@/components/HeroVideo"));
 
+// Misma razón que HeroVideo: esta sección no se necesita para el
+// primer paint (vive bien abajo del fold) y trae su propio fetch a
+// Google Sheets + lógica de layout — separarla en su propio chunk
+// evita que ese peso entre en el bundle principal.
+const WorkflowsExplorer = lazy(() => import("@/components/WorkflowsExplorer"));
+
 type Phase = "intro" | "revealed";
 
 export default function Home() {
@@ -194,6 +200,15 @@ export default function Home() {
         <CasosDeEstudio visible={phase === "revealed"} />
         <ConfiguraGafas visible={phase === "revealed"} />
       </FootprintTrailProvider>
+      {/* Workflows sí necesita su propio gating de fade (a diferencia del
+          comentario de SiteFooter más abajo): a diferencia de las
+          secciones de arriba, esta hace su propio fetch a la hoja de
+          Google Sheets, así que puede tardar un instante en aparecer —
+          el Suspense fallback evita un salto brusco de layout mientras
+          carga. */}
+      <Suspense fallback={null}>
+        <WorkflowsExplorer visible={phase === "revealed"} />
+      </Suspense>
       {/* Sin gating de fade: el scroll ya queda bloqueado durante "intro"
           (ver el efecto más abajo), así que nadie llega a verlo antes de
           tiempo — no hace falta repetir la coreografía de reveal de las
