@@ -16,14 +16,42 @@ import WorkflowsPointCloud from "./WorkflowsPointCloud";
  * video o agregás una fila en la hoja, la próxima vez que alguien cargue
  * la página de Workflows ya aparece. Ver src/lib/cms.ts para el detalle
  * de cómo se lee la hoja.
+ *
+ * Lógica de filtros — Eder, textual: "quiero que Arkio esté por default
+ * cuando entramos, pero que si yo desmarco Arkio, entonces también se
+ * desaparezcan los puntos... Ahora, cuando yo [selecciono] perfil C, sí
+ * deberían salir los que son de perfil C, pero... si yo presiono los
+ * perfiles B o A, deberían también incluir los videos básicos, no
+ * eliminarlos... de igual manera, para alguien avanzado, también
+ * deberían aparecer los tutoriales que son básicos... es como algo
+ * progresivo."
+ *
+ * Eso son DOS reglas distintas:
+ *  1. Programa: deja de ser "sin selección = se ven todos" — ahora la
+ *     selección manda siempre, de modo que desmarcar el único programa
+ *     que hay (Arkio) de verdad oculta sus videos, en vez de volver a
+ *     "ninguna selección = todo visible" (que es lo que pasaba antes:
+ *     con Arkio como único programa cargado, desmarcarlo no se notaba).
+ *     Por default arranca con Arkio marcado.
+ *  2. Nivel y Perfil de PC SÍ siguen siendo "sin selección = se ven
+ *     todos", pero cuando hay algo seleccionado, ya no es una selección
+ *     exacta: C/B/A y Principiante/Intermedio/Avanzado tienen un orden
+ *     de básico → avanzado (ver PERFIL_ORDER/NIVEL_ORDER), y marcar un
+ *     nivel muestra ESE nivel más todos los que estén por debajo
+ *     (más básicos) — así alguien en Perfil A o Nivel Avanzado puede
+ *     seguir viendo los tutoriales básicos que tal vez quiera repasar.
  */
 
 const NIVEL_ORDER = ["Principiante", "Intermedio", "Avanzado"];
+// De más básico a más avanzado — Perfil C es equipo sin GPU dedicada,
+// Perfil A es equipo alto (ver claude/logica-filtros-workflows.md).
+const PERFIL_ORDER = ["C", "B", "A"];
+const DEFAULT_PROGRAMAS = ["Arkio"];
 
-function sortNiveles(values: string[]): string[] {
+function sortByOrder(order: string[], values: string[]): string[] {
   return [...values].sort((a, b) => {
-    const ia = NIVEL_ORDER.indexOf(a);
-    const ib = NIVEL_ORDER.indexOf(b);
+    const ia = order.indexOf(a);
+    const ib = order.indexOf(b);
     if (ia === -1 && ib === -1) return a.localeCompare(b);
     if (ia === -1) return 1;
     if (ib === -1) return -1;
@@ -36,6 +64,31 @@ function toggleInSet(set: Set<string>, value: string): Set<string> {
   if (next.has(value)) next.delete(value);
   else next.add(value);
   return next;
+}
+
+function setsEqual(a: Set<string>, b: Set<string>): boolean {
+  if (a.size !== b.size) return false;
+  for (const v of a) if (!b.has(v)) return false;
+  return true;
+}
+
+/**
+ * Regla "progresiva" de Nivel/Perfil de PC: sin nada seleccionado, pasa
+ * cualquier valor (sin filtro). Con algo seleccionado, pasa si su rango
+ * es menor o igual que el rango MÁS ALTO seleccionado — así seleccionar
+ * un nivel avanzado arrastra automáticamente todo lo básico debajo,
+ * sin tener que marcarlo también a mano.
+ */
+function passesProgressive(order: string[], selected: Set<string>, value: string): boolean {
+  if (selected.size === 0) return true;
+  const valueRank = order.indexOf(value);
+  if (valueRank === -1) return false;
+  let maxSelectedRank = -1;
+  for (const s of selected) {
+    const rank = order.indexOf(s);
+    if (rank > maxSelectedRank) maxSelectedRank = rank;
+  }
+  return valueRank <= maxSelectedRank;
 }
 
 function FilterGroup({
@@ -81,7 +134,7 @@ function FilterGroup({
 
 export default function WorkflowsExplorer() {
   const data = useWorkflowsData();
-  const [programas, setProgramas] = useState<Set<string>>(new Set());
+  const [programas, setProgramas] = useState<Set<string>>(() => new Set(DEFAULT_PROGRAMAS));
   const [niveles, setNiveles] = useState<Set<string>>(new Set());
   const [perfiles, setPerfiles] = useState<Set<string>>(new Set());
 
@@ -94,25 +147,29 @@ export default function WorkflowsExplorer() {
   const nivelOptions = useMemo(() => {
     const values = new Set(data.listas?.nivel ?? []);
     data.videos.forEach((v) => v.nivel && values.add(v.nivel));
-    return sortNiveles(Array.from(values));
+    return sortByOrder(NIVEL_ORDER, Array.from(values));
   }, [data.listas, data.videos]);
 
   const perfilOptions = useMemo(() => {
     const values = new Set(data.listas?.perfilPc ?? []);
     data.videos.forEach((v) => v.perfilPc && values.add(v.perfilPc));
-    return Array.from(values).sort((a, b) => a.localeCompare(b));
+    return sortByOrder(PERFIL_ORDER, Array.from(values));
   }, [data.listas, data.videos]);
 
   const filteredVideos = useMemo(() => {
     return data.videos.filter((v) => {
-      if (programas.size > 0 && !programas.has(v.programa)) return false;
-      if (niveles.size > 0 && !niveles.has(v.nivel)) return false;
-      if (perfiles.size > 0 && !perfiles.has(v.perfilPc)) return false;
+      // Programa: la selección manda siempre (sin el escape "nada
+      // marcado = se ven todos" que tienen Nivel/Perfil más abajo) —
+      // así desmarcar Arkio de verdad lo oculta.
+      if (!programas.has(v.programa)) return false;
+      if (!passesProgressive(NIVEL_ORDER, niveles, v.nivel)) return false;
+      if (!passesProgressive(PERFIL_ORDER, perfiles, v.perfilPc)) return false;
       return true;
     });
   }, [data.videos, programas, niveles, perfiles]);
 
-  const hasActiveFilters = programas.size > 0 || niveles.size > 0 || perfiles.size > 0;
+  const hasActiveFilters =
+    !setsEqual(programas, new Set(DEFAULT_PROGRAMAS)) || niveles.size > 0 || perfiles.size > 0;
 
   return (
     <div className="mx-auto w-full max-w-[1600px] px-6 py-16 sm:px-10">
@@ -132,7 +189,7 @@ export default function WorkflowsExplorer() {
           <button
             type="button"
             onClick={() => {
-              setProgramas(new Set());
+              setProgramas(new Set(DEFAULT_PROGRAMAS));
               setNiveles(new Set());
               setPerfiles(new Set());
             }}
