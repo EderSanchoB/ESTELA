@@ -122,9 +122,10 @@ export default function WorkflowsExplorer() {
             Workflows
           </h1>
           <p className="mt-2 max-w-2xl font-sans text-sm text-neutral-500">
-            Cada punto es un video real de un flujo de trabajo VR/XR. Filtrá por
-            programa, nivel o perfil de PC para ver cómo cambian los recorridos —
-            y pasá el mouse sobre un punto para verlo.
+            Cada punto numerado es un video real de un flujo de trabajo VR/XR,
+            conectado en el orden de su recorrido. Filtrá por programa, nivel o
+            perfil de PC, pasá el mouse sobre un punto para ver de qué trata y
+            hacé clic para reproducirlo aquí mismo.
           </p>
         </div>
         {hasActiveFilters && (
