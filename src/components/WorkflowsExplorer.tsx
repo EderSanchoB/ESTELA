@@ -3,11 +3,19 @@ import { useWorkflowsData } from "@/hooks/useWorkflowsData";
 import WorkflowsPointCloud from "./WorkflowsPointCloud";
 
 /**
- * Sección "Workflows", Eder. Se lee en vivo de tu hoja "CMS" (tabs
- * Tutoriales + Listas) cada vez que alguien abre la página — no hay
- * nada "quemado" acá: si editás un video o agregás una fila en la
- * hoja, la próxima vez que alguien cargue el sitio ya aparece. Ver
- * src/lib/cms.ts para el detalle de cómo se lee la hoja.
+ * Contenido de la página "Workflows" (ver src/pages/Workflows.tsx) —
+ * Eder pidió que esto NO fuera una sección más del home, sino su propia
+ * página, accesible solo desde el link "Workflows" de la topbar y el
+ * footer. Este componente ya no es un <section> con id de ancla ni
+ * gating de fade (eso era para encajar en la coreografía de scroll del
+ * home) — acá es simplemente el cuerpo de la página: título, filtros y
+ * la visualización de puntos.
+ *
+ * Se lee en vivo de tu hoja "CMS" (tabs Tutoriales + Listas) cada vez
+ * que alguien abre la página — no hay nada "quemado" acá: si editás un
+ * video o agregás una fila en la hoja, la próxima vez que alguien cargue
+ * la página de Workflows ya aparece. Ver src/lib/cms.ts para el detalle
+ * de cómo se lee la hoja.
  */
 
 const NIVEL_ORDER = ["Principiante", "Intermedio", "Avanzado"];
@@ -71,7 +79,7 @@ function FilterGroup({
   );
 }
 
-export default function WorkflowsExplorer({ visible }: { visible: boolean }) {
+export default function WorkflowsExplorer() {
   const data = useWorkflowsData();
   const [programas, setProgramas] = useState<Set<string>>(new Set());
   const [niveles, setNiveles] = useState<Set<string>>(new Set());
@@ -107,80 +115,72 @@ export default function WorkflowsExplorer({ visible }: { visible: boolean }) {
   const hasActiveFilters = programas.size > 0 || niveles.size > 0 || perfiles.size > 0;
 
   return (
-    <section
-      id="workflows"
-      className={`border-t border-line bg-white py-20 transition-all duration-700 ease-out ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-      }`}
-      aria-hidden={!visible}
-    >
-      <div className="mx-auto w-full max-w-[1600px] px-6 sm:px-10">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h2 className="font-display text-2xl font-semibold text-neutral-900">
-              Workflows
-            </h2>
-            <p className="mt-2 max-w-2xl font-sans text-sm text-neutral-500">
-              Cada punto es un video real de un flujo de trabajo VR/XR. Filtrá por
-              programa, nivel o perfil de PC para ver cómo cambian los recorridos —
-              y pasá el mouse sobre un punto para verlo.
+    <div className="mx-auto w-full max-w-[1600px] px-6 py-16 sm:px-10">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <h1 className="font-display text-3xl font-semibold text-neutral-900 sm:text-4xl">
+            Workflows
+          </h1>
+          <p className="mt-2 max-w-2xl font-sans text-sm text-neutral-500">
+            Cada punto es un video real de un flujo de trabajo VR/XR. Filtrá por
+            programa, nivel o perfil de PC para ver cómo cambian los recorridos —
+            y pasá el mouse sobre un punto para verlo.
+          </p>
+        </div>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={() => {
+              setProgramas(new Set());
+              setNiveles(new Set());
+              setPerfiles(new Set());
+            }}
+            className="font-mono text-xs uppercase tracking-wide text-neutral-400 underline-offset-4 hover:text-neutral-700 hover:underline"
+          >
+            Limpiar filtros
+          </button>
+        )}
+      </div>
+
+      <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:gap-10">
+        <FilterGroup
+          label="Programa"
+          options={programaOptions}
+          selected={programas}
+          onToggle={(value) => setProgramas((prev) => toggleInSet(prev, value))}
+        />
+        <FilterGroup
+          label="Nivel"
+          options={nivelOptions}
+          selected={niveles}
+          onToggle={(value) => setNiveles((prev) => toggleInSet(prev, value))}
+        />
+        <FilterGroup
+          label="Perfil de PC"
+          options={perfilOptions}
+          selected={perfiles}
+          onToggle={(value) => setPerfiles((prev) => toggleInSet(prev, value))}
+        />
+      </div>
+
+      <div className="mt-10">
+        {data.status === "loading" && (
+          <div className="flex h-[70vh] min-h-[560px] items-center justify-center">
+            <p className="font-sans text-sm text-neutral-400">Cargando workflows…</p>
+          </div>
+        )}
+        {data.status === "error" && (
+          <div className="flex h-[70vh] min-h-[560px] flex-col items-center justify-center gap-2 px-6 text-center">
+            <p className="font-sans text-sm text-neutral-500">
+              No se pudieron cargar los workflows en este momento.
+            </p>
+            <p className="font-sans text-xs text-neutral-400">
+              Revisá tu conexión e intentá recargar la página.
             </p>
           </div>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={() => {
-                setProgramas(new Set());
-                setNiveles(new Set());
-                setPerfiles(new Set());
-              }}
-              className="font-mono text-xs uppercase tracking-wide text-neutral-400 underline-offset-4 hover:text-neutral-700 hover:underline"
-            >
-              Limpiar filtros
-            </button>
-          )}
-        </div>
-
-        <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:flex-wrap sm:gap-10">
-          <FilterGroup
-            label="Programa"
-            options={programaOptions}
-            selected={programas}
-            onToggle={(value) => setProgramas((prev) => toggleInSet(prev, value))}
-          />
-          <FilterGroup
-            label="Nivel"
-            options={nivelOptions}
-            selected={niveles}
-            onToggle={(value) => setNiveles((prev) => toggleInSet(prev, value))}
-          />
-          <FilterGroup
-            label="Perfil de PC"
-            options={perfilOptions}
-            selected={perfiles}
-            onToggle={(value) => setPerfiles((prev) => toggleInSet(prev, value))}
-          />
-        </div>
-
-        <div className="mt-10">
-          {data.status === "loading" && (
-            <div className="flex h-[480px] items-center justify-center rounded-3xl border border-line bg-white sm:h-[600px]">
-              <p className="font-sans text-sm text-neutral-400">Cargando workflows…</p>
-            </div>
-          )}
-          {data.status === "error" && (
-            <div className="flex h-[480px] flex-col items-center justify-center gap-2 rounded-3xl border border-line bg-white px-6 text-center sm:h-[600px]">
-              <p className="font-sans text-sm text-neutral-500">
-                No se pudieron cargar los workflows en este momento.
-              </p>
-              <p className="font-sans text-xs text-neutral-400">
-                Revisá tu conexión e intentá recargar la página.
-              </p>
-            </div>
-          )}
-          {data.status === "ready" && <WorkflowsPointCloud videos={filteredVideos} />}
-        </div>
+        )}
+        {data.status === "ready" && <WorkflowsPointCloud videos={filteredVideos} />}
       </div>
-    </section>
+    </div>
   );
 }

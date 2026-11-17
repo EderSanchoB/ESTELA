@@ -21,7 +21,7 @@ import FooterWave from "./FooterWave";
 // que ese salto nunca pase primero por la animación de intro del home.
 const FOOTER_COLUMNS: Array<Array<{ label: string; href: string }>> = [
   [
-    { label: "Workflows", href: "/#workflows" },
+    { label: "Workflows", href: "/workflows" },
     { label: "Plantillas", href: "/#plantillas" },
   ],
   [

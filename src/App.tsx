@@ -1,6 +1,7 @@
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "@/pages/Home";
+import Workflows from "@/pages/Workflows";
 import MetaQuest from "@/pages/tutoriales/MetaQuest";
 import HtcVive from "@/pages/tutoriales/HtcVive";
 import ValveIndex from "@/pages/tutoriales/ValveIndex";
@@ -47,6 +48,7 @@ export default function App() {
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/workflows" element={<Workflows />} />
           <Route path="/tutoriales/meta-quest" element={<MetaQuest />} />
           <Route path="/tutoriales/htc-vive" element={<HtcVive />} />
           <Route path="/tutoriales/valve-index" element={<ValveIndex />} />

@@ -7,7 +7,7 @@ import { withBase } from "@/lib/withBase";
 import { scrollToSectionIfPresent } from "@/lib/scrollToSection";
 
 const NAV_LINKS = [
-  { label: "Workflows", href: "#workflows" },
+  { label: "Workflows", href: "/workflows" },
   { label: "Plantillas", href: "#plantillas" },
   { label: "Instrucciones VR", href: "#instrucciones-vr" },
   { label: "FAQ", href: "#faq" },

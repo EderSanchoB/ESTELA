@@ -175,7 +175,7 @@ export default function WorkflowsPointCloud({ videos }: { videos: WorkflowVideo[
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative h-[480px] w-full overflow-hidden rounded-3xl border border-line bg-white sm:h-[600px]"
+      className="relative h-[70vh] min-h-[560px] w-full overflow-hidden"
     >
       {videos.length === 0 && (
         <p className="absolute inset-0 flex items-center justify-center px-6 text-center font-sans text-sm text-neutral-400">
