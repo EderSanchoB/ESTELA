@@ -547,6 +547,12 @@ function Scene({
       if (refs.side) {
         const g = Math.round(tone(LABEL_TONE, t) * 255);
         refs.side.style.color = `rgb(${g},${g},${g})`;
+        // El número de paso va "un poco más oscuro" que el título (pedido
+        // explícito de Eder) — no solo más grueso (font-medium vs
+        // font-light): una variable CSS aparte, un poco más oscura que el
+        // color base, que el span del número usa en vez de heredar.
+        const gNum = Math.max(0, g - 45);
+        refs.side.style.setProperty("--step-color", `rgb(${gNum},${gNum},${gNum})`);
       }
       screen.push({ id: v.id, x, y, refs });
     });
@@ -649,7 +655,7 @@ function VideoNodes({
             >
               {!isHovered ? (
                 <p className="flex items-baseline gap-2 whitespace-nowrap font-sans text-[11.5px] font-light leading-none tracking-[0.01em] [text-shadow:0_0_3px_#fff,0_0_3px_#fff,0_0_2px_#fff] group-data-[side=left]/side:-translate-x-[12px] group-data-[side=left]/side:flex-row-reverse group-data-[side=right]/side:translate-x-[12px]">
-                  <span className="font-mono text-[11px] font-medium">{pad2(video.paso)}</span>
+                  <span className="font-mono text-[11px] font-medium" style={{ color: "var(--step-color, currentColor)" }}>{pad2(video.paso)}</span>
                   <span>{shortTitle(video.titulo, compact)}</span>
                 </p>
               ) : (
