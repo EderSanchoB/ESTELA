@@ -659,7 +659,36 @@ function VideoNodes({
                   <span>{shortTitle(video.titulo, compact)}</span>
                 </p>
               ) : (
-                <div className="w-60 max-w-[55vw] font-sans text-neutral-900 group-data-[side=left]/side:-translate-x-[54px] group-data-[side=right]/side:translate-x-[54px]">
+                <div className="relative isolate w-60 max-w-[55vw] font-sans text-neutral-900 group-data-[side=left]/side:-translate-x-[54px] group-data-[side=right]/side:translate-x-[54px]">
+                  {/* Eder: "al ampliarse la descripción del video, no se lee
+                      tan bien... que se mantenga sin burbuja detrás mientras
+                      no me haya posicionado sobre él, pero que al
+                      posicionarme, se ponga detrás una burbuja en blur, sin
+                      bordes definidos." Esta capa solo existe en esta rama
+                      (la del hover) — el texto suelto de abajo (!isHovered)
+                      sigue sin nada detrás. El borde "sin definir" no es un
+                      recuadro con esquinas redondeadas: es un degradado
+                      radial usado como máscara (mask-image), así el blur
+                      (y el tinte blanco) se desvanecen gradualmente hacia
+                      afuera en vez de cortar en un borde recto. -z-10 +
+                      "isolate" en el contenedor: que quede detrás del texto
+                      de esta tarjeta, pero sin colarse detrás del resto de
+                      la página (isolate le crea su propio contexto de
+                      apilamiento). */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-5 -z-10"
+                    style={{
+                      backdropFilter: "blur(16px)",
+                      WebkitBackdropFilter: "blur(16px)",
+                      background:
+                        "radial-gradient(ellipse at center, rgba(255,255,255,0.88) 40%, rgba(255,255,255,0) 100%)",
+                      maskImage:
+                        "radial-gradient(ellipse at center, black 40%, transparent 100%)",
+                      WebkitMaskImage:
+                        "radial-gradient(ellipse at center, black 40%, transparent 100%)",
+                    }}
+                  />
                   <p className="font-mono text-[10px] uppercase tracking-wide text-neutral-400">
                     Paso {pad2(video.paso)} · {video.programa}
                     {video.duracionMin > 0 ? ` · ${video.duracionMin} min` : ""}
