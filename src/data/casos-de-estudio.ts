@@ -27,7 +27,14 @@ export type CasoDeEstudio = {
   /** Ámbito (Científico/Militar, Experimental/Diseño, etc.) — texto de la
    * píldora de encabezado ("firm-label"). */
   ambito: string;
-  /** Autor/firma · periodo · lugar. */
+  /** Periodo/año del caso (columna "Periodo" de la hoja — texto como
+   * aparece en la ficha, ej. "1984–1990", "2021–"; puede diferir del
+   * "Año" numérico que solo se usa para el orden cronológico). Un
+   * archivo histórico es, por definición, datado: este campo existe
+   * para que la fecha SIEMPRE se vea en la ficha, nunca escondida
+   * dentro de otro texto combinado. */
+  periodo: string;
+  /** Autor/firma · lugar (la fecha va aparte, en `periodo`). */
   subtitulo: string;
   descripcion: string;
   tecnologia: string;

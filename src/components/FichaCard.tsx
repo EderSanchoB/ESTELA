@@ -49,8 +49,17 @@ export default function FichaCard({ caso }: { caso: CasoDeEstudio }) {
 
         <div className="flex flex-col gap-[11px]">
           <div>
-            <div className="mb-[5px] font-mono text-[8px] tracking-[0.10em] text-white/55">
-              {caso.ambito}
+            {/* Ámbito · Periodo: un archivo histórico siempre debe traer
+                fecha visible — la fecha va aparte del ámbito, nunca
+                escondida dentro del subtítulo combinado de abajo. */}
+            <div className="mb-[5px] flex items-baseline gap-[6px] font-mono text-[8px] tracking-[0.10em] text-white/55">
+              <span>{caso.ambito}</span>
+              {caso.periodo && (
+                <>
+                  <span aria-hidden="true" className="text-white/30">·</span>
+                  <span className="text-white/75">{caso.periodo}</span>
+                </>
+              )}
             </div>
             <div className="mb-[5px] font-display text-xl font-bold leading-[1.12] tracking-[-0.01em] text-white">
               {caso.titulo.map((linea, i) => (
