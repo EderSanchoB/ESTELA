@@ -216,11 +216,16 @@ export async function fetchArchivoHistorico(): Promise<CasoDeEstudio[]> {
     if (!cellBool(row[20])) continue; // Publicado
 
     const autor = cellText(row[6]);
-    const periodo = cellText(row[2]);
     const lugar = cellText(row[7]);
+    const anio = cellNumber(row[1]);
+    // Respaldo: un archivo histórico siempre debe traer fecha, así que
+    // si la columna "Periodo" viniera vacía (celda sin llenar, o algún
+    // problema de lectura), se usa el Año puro en su lugar — nunca se
+    // deja la ficha sin fecha.
+    const periodo = cellText(row[2]) || String(anio);
 
     conAnio.push({
-      anio: cellNumber(row[1]),
+      anio,
       caso: {
         codigo,
         titulo: [cellText(row[3])],
